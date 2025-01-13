@@ -11,6 +11,14 @@ $tables = $wpdb->get_results( "SELECT * FROM $table_name" );
 
 ?>
 <div class="wrap">
+	<?php if( isset($_GET['action']) && $_GET['action'] === 'success'){ ?>
+		<div class="notice notice-success is-dismissible" role="alert">
+			<p>Table added.</p>
+			<button type="button" class="notice-dismiss">
+				<span class="screen-reader-text">Dismiss this notice.</span>
+			</button>
+		</div>
+	<?php }	?>
 	<h1 class="wp-heading-inline">Ticket Options</h1>
 	<button id="add-table-btn" class="page-title-action">Add Table</button>
 
@@ -61,7 +69,10 @@ $tables = $wpdb->get_results( "SELECT * FROM $table_name" );
 		</form>
 	</div>
 
+	
+
 	<h2>All Tables</h2>
+	
 	<table class="wp-list-table widefat fixed striped">
 		<thead>
 			<tr>
@@ -117,8 +128,11 @@ $tables = $wpdb->get_results( "SELECT * FROM $table_name" );
 
 			$.post(ticketBookingAjax.ajax_url, data, function (response) {
 				if (response.success) {
-					alert(response.data.message);
-					location.reload();
+					// alert(response.data.message);
+					// location.reload();
+					const url = new URL(window.location.href);
+					url.searchParams.set('action', 'success');
+					window.location.href = url.toString();
 				} else {
 					alert(response.data.message || 'An error occurred.');
 				}

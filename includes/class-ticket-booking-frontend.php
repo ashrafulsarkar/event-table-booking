@@ -31,9 +31,30 @@ class Ticket_Booking_Frontend {
 		ob_start();
 		?>
 		<div id="ticket-booking-layout">
-			<h1>Ticket Booking</h1>
-			<div id="table-grid">
+			<h1>Stage</h1>
+			<div id="table-grid" class="table_booking_grid">
 				<!-- Tables will be dynamically loaded here -->
+			</div>
+			<div class="table_plan_key">
+				<h4>TABLE PLAN KEY</h4>
+				<div class="plan_key">
+					<div class="plan booked">
+						<div class="plan_color"></div>
+						<h5>Booked</h5>
+					</div>
+					<div class="plan full">
+						<div class="plan_color"></div>
+						<h5>table of 10 available</h5>
+					</div>
+					<div class="plan half">
+						<div class="plan_color"></div>
+						<h5>Table of 5 available</h5>
+					</div>
+					<div class="plan individual">
+						<div class="plan_color"></div>
+						<h5>individual available</h5>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div id="booking-popup" style="display: none;">
@@ -101,10 +122,9 @@ class Ticket_Booking_Frontend {
 			echo '<div class="table ' . esc_attr( $status_class ) . esc_attr( $type_class ) . '" data-table-number="' . esc_attr( $table->table_number ) . '" data-seat-capacity="' . esc_attr( $seat_capacity ) . '" data-price="' . esc_attr( $price ) . '" data-individual="' . esc_attr( $table_individual ) . '" data-type="' . esc_attr( $table_type ) . '">';
 
 			if ( $table->table_status === 'Sold' ) {
-				echo '<p>' . esc_html( $table->table_status ) . '</p>';
+				echo '<p>Sold!</p>';
 			} else {
-				echo '<h5>' . esc_html( $table->table_number ) . '</h5>';
-				echo '<h6>Table</h6>';
+				echo '<p>' . esc_html( $table->table_number ) . '<span>Table</span></p>';
 			}
 			echo '</div>';
 		}

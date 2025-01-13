@@ -4,6 +4,7 @@ jQuery(document).ready(function($) {
         $.post(ticketBookingAjax.ajax_url, { action: 'load_tables' }, function(response) {
             if (response.success) {
                 $('#table-grid').html(response.data);
+                setupGridLayout();
             } else {
                 $('#table-grid').html('<p>' + response.data + '</p>');
             }
@@ -11,6 +12,16 @@ jQuery(document).ready(function($) {
     }
 
     loadTables();
+
+    function setupGridLayout() {
+        const tableCount = document.querySelectorAll('#table-grid .table').length;
+        if (tableCount > 36) {
+            $('#table-grid').css('grid-template-columns', 'repeat(13, 1fr)');
+        } else {
+            $('#table-grid').css('grid-template-columns', 'repeat(12, 1fr)');
+        }
+    }
+
 
     let basePrice = 0;
 
@@ -90,4 +101,6 @@ jQuery(document).ready(function($) {
         // Submit the form
         $('#booking-form').submit();
     });
+
+    
 });
