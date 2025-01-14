@@ -113,19 +113,84 @@
 
 #booking-popup {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #fff;
-    padding: 20px;
-    border: 1px solid #ccc;
+    top: 0;
+    left: 0;
+    background: #3f3f3fcc;
     z-index: 1000;
+    width: 100%;
+    height: 100%;
 }
-
+#booking-popup #booking-form {
+    background: #fff;
+    padding: 40px;
+    width: 320px;
+    height: 288px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+#booking-popup button#close-popup {
+    background: #A5A5A5;
+    border: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    position: absolute;
+    right: -12px;
+    top: -12px;
+    padding: 0;
+}
 #booking-popup h2 {
-    margin-top: 0;
+    font-size: 22px;
+    line-height: 26px;
+    font-weight: 800;
+    margin-bottom: 32px;
 }
-
-#booking-popup button {
-    margin-top: 10px;
+#booking-popup p,
+#booking-popup label {
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: 800;
+    margin: 0;
+}
+#booking-popup p#popup-seat-capacity,
+#booking-popup label {
+    margin-bottom: 16px;
+}
+#booking-popup #continue-to-payment {
+    margin-top: 32px;
+    width: 100%;
+    text-align: center;
+    background: #000000;
+    border: 0;
+    padding: 12px;
+    border-radius: 0;
+    color: #fff;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+#booking-popup .input_option {
+    display: inline-flex;
+    border: 1px solid #DACFB3;
+    padding: 8px;
+    border-radius: 4px;
+}
+#booking-popup .input_option button {
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    border: none;
+    color: #000;
+    font-size: 16px;
+    font-weight: 700;
+}
+#booking-popup .input_option input {
+    width: 24px;
+    padding: 0;
+    text-align: center;
+    border: none;
+    font-weight: 800;
 }

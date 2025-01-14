@@ -59,15 +59,18 @@ class Ticket_Booking_Frontend {
 		</div>
 		<div id="booking-popup" style="display: none;">
 			<form id="booking-form" action="<?php echo site_url('/checkout');?>" method="POST">
+				<button type="button" id="close-popup" class="button"><i class="fa-solid fa-xmark"></i></button>
 				<h2>TABLE NO: <span id="popup-table-number"></span></h2>
 				<div id="seat-quantity-wrapper" style="display: none;">
 					<label for="seat-quantity">SEAT QUANTITY:</label>
-					<button type="button" id="decrease-seat">-</button>
-					<input type="number" id="seat-quantity" min="1" max="5" readonly>
-					<button type="button" id="increase-seat">+</button>
+					<div class="input_option">
+						<button type="button" id="decrease-seat">-</button>
+						<input type="number" id="seat-quantity" min="1" max="5" readonly>
+						<button type="button" id="increase-seat">+</button>
+					</div>
 				</div>
 				<p id="popup-seat-capacity" style="display: block;">SEAT CAPACITY: <span></span></p>
-				<p>PRICE: <span id="popup-price"></span> + VAT</p>
+				<p>PRICE: £<span id="popup-price"></span> + VAT</p>
 
 				<input type="hidden" name="table_number" id="hidden-table-number" />
 				<input type="hidden" name="seat_quantity" id="hidden-seat-quantity" />
@@ -75,7 +78,6 @@ class Ticket_Booking_Frontend {
 				<input type="hidden" name="price" id="hidden-price" />
 
 				<button type="submit" class="button" id="continue-to-payment">CONTINUE TO PAYMENT</button>
-				<button type="button" id="close-popup" class="button">Cancel</button>
 			</form>
 		</div>
 
