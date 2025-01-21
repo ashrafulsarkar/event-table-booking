@@ -50,6 +50,16 @@ class Ticket_Booking_Admin {
 			array( $this, 'render_ticket_options_page' )
 		);
 
+		// Submenu: Ticket Options
+		add_submenu_page(
+			'ticket-booking-dashboard',
+			'Ticket Refund',
+			'Refund',
+			'manage_options',
+			'ticket-booking-ticket-refund',
+			array( $this, 'render_ticket_refund_page' )
+		);
+
 		// Submenu: Settings
 		add_submenu_page(
 			'ticket-booking-dashboard',
@@ -92,6 +102,10 @@ class Ticket_Booking_Admin {
 
 	public function render_ticket_options_page() {
 		require_once WP_TICKET_BOOKING_PATH . 'includes/views/ticket_options.php';
+	}
+
+	public function render_ticket_refund_page() {
+		require_once WP_TICKET_BOOKING_PATH . 'includes/views/refund.php';
 	}
 
 	public function render_settings_page() {

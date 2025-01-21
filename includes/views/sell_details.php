@@ -35,7 +35,8 @@ class Ticket_Booking_List_Table extends WP_List_Table {
 		$where  = '';
 		if ( $search ) {
 			$where = $wpdb->prepare(
-				"WHERE fname LIKE %s OR lname LIKE %s OR email LIKE %s",
+				"WHERE fname LIKE %s OR lname LIKE %s OR email LIKE %s OR order_id LIKE %s",
+				'%' . $wpdb->esc_like( $search ) . '%',
 				'%' . $wpdb->esc_like( $search ) . '%',
 				'%' . $wpdb->esc_like( $search ) . '%',
 				'%' . $wpdb->esc_like( $search ) . '%'
@@ -76,13 +77,13 @@ class Ticket_Booking_List_Table extends WP_List_Table {
 			'table_number'    => __( 'Table Number', 'textdomain' ),
 			'name'            => __( 'Name', 'textdomain' ),
 			'email'           => __( 'Email', 'textdomain' ),
-			'phone'           => __( 'Phone', 'textdomain' ),
 			'table_type'      => __( 'Type', 'textdomain' ),
 			'number_of_seats' => __( 'Booked Seats', 'textdomain' ),
 			'payment_status'  => __( 'Payment Status', 'textdomain' ),
 			'amount'          => __( 'Amount', 'textdomain' ),
+			'order_id'        => __( 'Order ID', 'textdomain' ),
 			'payment_id'      => __( 'Payment ID', 'textdomain' ),
-			'actions'         => __( 'Actions', 'textdomain' ),
+			'order_date'      => __( 'Date', 'textdomain' ),
 		];
 	}
 
@@ -108,39 +109,8 @@ class Ticket_Booking_List_Table extends WP_List_Table {
 		}
 	}
 
-	protected function column_actions( $item ) {
-		$actions = [ 
-			'edit'   => sprintf(
-				'<a href="%s">%s</a>',
-				admin_url( 'admin.php?page=edit-booking&id=' . $item->id ),
-				__( 'Edit', 'textdomain' )
-			),
-			'delete' => sprintf(
-				'<a href="%s" onclick="return confirm(\'Are you sure?\')">%s</a>',
-				wp_nonce_url( admin_url( 'admin.php?page=bookings&action=delete&id=' . $item->id ), 'delete_booking_' . $item->id ),
-				__( 'Delete', 'textdomain' )
-			)
-		];
-		return implode( ' | ', $actions );
-	}
-
 	public function no_items() {
 		_e( 'No bookings found.', 'textdomain' );
-	}
-}
-
-// Main display code
-// Handle actions first
-if ( isset( $_GET['action'] ) && $_GET['action'] === 'delete' ) {
-	if ( isset( $_GET['id'] ) && check_admin_referer( 'delete_booking_' . $_GET['id'] ) ) {
-		global $wpdb;
-		$table_name = $wpdb->prefix . 'ticket_bookings';
-		$wpdb->delete(
-			$table_name,
-			[ 'id' => $_GET['id'] ],
-			[ '%d' ]
-		);
-		add_settings_error( 'booking_messages', 'booking_deleted', __( 'Booking deleted successfully.', 'textdomain' ), 'updated' );
 	}
 }
 

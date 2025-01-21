@@ -49,7 +49,7 @@
 					<label for="stripe_public_key">Stripe Public Key</label>
 				</th>
 				<td>
-					<input type="text" id="stripe_public_key" name="stripe_public_key"
+					<input type="password" id="stripe_public_key" name="stripe_public_key"
 						value="<?php echo esc_attr( $stripe_public_key ); ?>" class="regular-text">
 				</td>
 			</tr>
@@ -59,7 +59,7 @@
 					<label for="stripe_client_secret">Stripe Client Secret</label>
 				</th>
 				<td>
-					<input type="text" id="stripe_client_secret" name="stripe_client_secret"
+					<input type="password" id="stripe_client_secret" name="stripe_client_secret"
 						value="<?php echo esc_attr( $stripe_client_secret ); ?>" class="regular-text">
 				</td>
 			</tr>

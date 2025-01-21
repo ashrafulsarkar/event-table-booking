@@ -101,15 +101,14 @@ class Ticket_Booking_Checkout {
 								fontSmoothing: 'antialiased',
 								'::placeholder': {
 									color: '#aab7c4'
-								},
-								border: '1px solid #BBA14E',
-								borderRadius: '4px',
+								}
 							},
 							invalid: {
 								color: '#fa755a',
 								iconColor: '#fa755a'
 							}
-						}
+						},
+						hidePostalCode: true,
 					});
 
 					card.mount('#card-element');

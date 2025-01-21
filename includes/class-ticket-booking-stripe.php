@@ -92,8 +92,6 @@ class Ticket_Booking_Stripe {
 				],
 			] );
 
-
-
 			if ( $table_type === 'full' ) {
 				$table_type_text = 'Full Table';
 			} elseif ( $table_type === 'half' ) {
@@ -122,6 +120,9 @@ class Ticket_Booking_Stripe {
 				[ '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%f', '%s', '%s' ]
 			);
 
+			// send email using send_mail class
+			do_action( 'ticket_booking_order_complete', $order_id );
+			
 			wp_send_json_success( [ 
 				'payment_intent' => $payment_intent,
 				'redirect_url'   => site_url( '/payment-return' ),

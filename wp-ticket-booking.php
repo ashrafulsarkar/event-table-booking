@@ -27,7 +27,9 @@ require_once WP_TICKET_BOOKING_PATH . 'includes/class-ticket-booking-admin.php';
 require_once WP_TICKET_BOOKING_PATH . 'includes/class-ticket-booking-frontend.php';
 require_once WP_TICKET_BOOKING_PATH . 'includes/class-ticket-booking-checkout.php';
 require_once WP_TICKET_BOOKING_PATH . 'includes/hooks/ticket_options.php';
+require_once WP_TICKET_BOOKING_PATH . 'includes/hooks/refund.php';
 require_once WP_TICKET_BOOKING_PATH . 'includes/class-ticket-booking-stripe.php';
+require_once WP_TICKET_BOOKING_PATH . 'includes/class-send-mail.php';
 
 // Initialize the plugin.
 function wp_ticket_booking_init() {
@@ -35,5 +37,6 @@ function wp_ticket_booking_init() {
     new Ticket_Booking_Frontend();
     new Ticket_Booking_Checkout();
     new Ticket_Booking_Stripe();
+    new Ticket_Send_Mail();
 }
 add_action( 'plugins_loaded', 'wp_ticket_booking_init' );

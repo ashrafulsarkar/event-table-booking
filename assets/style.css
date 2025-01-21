@@ -17,6 +17,7 @@
     justify-items: center;
     max-width: 900px;
     margin: auto;
+    grid-template-columns: repeat(13, 1fr);
 }
 .table_booking_grid .table:nth-child(37) {
     grid-row: 4;
