@@ -70,10 +70,24 @@
 	</form>
 
 	<!-- reset database -->
+	<h2>Reset Database</h2>
 	<form method="POST">
 		<?php wp_nonce_field( 'ticket_booking_reset_database' ); ?>
-		<p class="submit">
-			<button type="submit" name="reset_database" class="button button-secondary" onclick="return confirm('Denger: Are you sure you want to reset the database? You will lose your all booking information.');">Reset Database</button>
-		</p>
+		<input type="text" name="reset_text" placeholder="Type 'reset' to confirm" class="regular-text">
+		<button type="submit" name="reset_database" class="button button-secondary">Reset Database</button>
+		<script>
+			// Confirm before reset database
+			document.querySelector('button[name="reset_database"]').addEventListener('click', function(e) {
+				var confirmText = document.querySelector('input[name="reset_text"]').value;
+				if (confirmText !== 'reset') {
+					e.preventDefault();
+					alert('Please type "reset" to confirm.');
+					return false;
+				}else {
+					confirm('Are you sure you want to reset the database? You will lose all Booking data!');
+					return true;
+				}
+			});
+		</script>
 	</form>
 </div>

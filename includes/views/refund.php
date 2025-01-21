@@ -4,14 +4,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <div class="wrap">
-	<?php if( isset($_GET['action']) && $_GET['action'] === 'success'){ ?>
-		<div class="notice notice-success is-dismissible" role="alert">
-			<p>Table added.</p>
-			<button type="button" class="notice-dismiss">
-				<span class="screen-reader-text">Dismiss this notice.</span>
-			</button>
-		</div>
-	<?php }	?>
 	<h1 class="wp-heading-inline">Refund Ticket</h1>
 
 	<div class="order_search">

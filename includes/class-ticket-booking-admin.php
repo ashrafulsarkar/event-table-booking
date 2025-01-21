@@ -138,6 +138,11 @@ class Ticket_Booking_Admin {
 		// Reset database
 		// my database is 'ticket_details' and 'ticket_bookings'
 		if ( isset( $_POST['reset_database'] ) ) {
+			if ( $_POST['reset_text'] !== 'reset' ) {
+				echo '<div class="notice notice-error"><p>Invalid confirmation text!</p></div>';
+				return;
+			}
+			
 			check_admin_referer( 'ticket_booking_reset_database' );
 
 			global $wpdb;
