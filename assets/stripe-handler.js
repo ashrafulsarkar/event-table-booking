@@ -54,7 +54,6 @@ document.addEventListener('DOMContentLoaded', function () {
             method: 'POST',
             data: {
                 action: 'process_payment', // Must match the PHP action hook
-                // nonce: checkoutData.nonce, // Must match the PHP nonce
                 payment_method: paymentMethod.id, // Should not be null/undefined
                 amount: totalPrice * 100, // Ensure this is a valid number
                 table_number: tableNumber,
@@ -72,11 +71,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     // console.log(response.data.payment_intent);
                     window.location.href = response.data.redirect_url+'?payment_intent='+response.data.payment_intent.id;
                 } else {
+                    payNowButton.disabled = false;
                     alert('Payment failed: ' + response.data);                    
                 }
             },
             error: function (xhr, status, error) {
                 // console.log('AJAX Error:', xhr.responseText);
+                payNowButton.disabled = false;
                 alert('Payment failed: ' + error);
             },
         });

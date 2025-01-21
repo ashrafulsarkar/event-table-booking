@@ -9,11 +9,14 @@
     border: 1px solid #111;
     margin: 0 0 50px;
     display: inline-block;
+    font-family: 'Sweetest goods celesse', sans-serif;
 }
 #table-grid {
     display: grid;
     gap: 10px;
     justify-items: center;
+    max-width: 900px;
+    margin: auto;
 }
 .table_booking_grid .table:nth-child(37) {
     grid-row: 4;
@@ -45,16 +48,19 @@
     font-size: 14px;
     font-weight: 800;
     text-transform: uppercase;
+    font-family: 'Graphite geometos soft extra', sans-serif;
 }
 .table_booking_grid .table p {
     font-size: 27px;
     line-height: 1;
+    font-family: 'Sweetest goods celesse', sans-serif;
 }
 .table_booking_grid .table p span {
     display: block;
     font-size: 8px;
     text-transform: uppercase;
     font-weight: 800;
+    font-family: 'Graphite geometos soft extra', sans-serif;
 }
 .table_booking_grid .table-sold {
     background: #3D3D3D;
@@ -78,6 +84,7 @@
     font-size: 28px;
     color: #000;
     margin-bottom: 10px;
+    font-family: 'Sweetest goods celesse', sans-serif;
 }
 .table_plan_key {
     padding-top: 50px;
@@ -100,8 +107,10 @@
     margin: 0;
     color: #000;
     font-size: 10px;
+    line-height: 1;
     font-weight: 800;
     text-transform: uppercase;
+    font-family: 'Graphite geometos soft extra', sans-serif;
 }
 .plan_key {
     display: flex;
@@ -142,12 +151,14 @@
     right: -12px;
     top: -12px;
     padding: 0;
+    cursor: pointer;
 }
 #booking-popup h2 {
     font-size: 22px;
     line-height: 26px;
     font-weight: 800;
     margin-bottom: 32px;
+    font-family: 'Graphite geometos soft extra', sans-serif;
 }
 #booking-popup p,
 #booking-popup label {
@@ -155,10 +166,12 @@
     line-height: 20px;
     font-weight: 800;
     margin: 0;
+    font-family: 'Graphite geometos soft extra', sans-serif;
 }
 #booking-popup p#popup-seat-capacity,
 #booking-popup label {
     margin-bottom: 16px;
+    font-family: 'Graphite geometos soft extra', sans-serif;
 }
 #booking-popup #continue-to-payment {
     margin-top: 32px;
@@ -171,6 +184,8 @@
     color: #fff;
     font-weight: 800;
     text-transform: uppercase;
+    font-family: 'Graphite geometos soft extra', sans-serif;
+    cursor: pointer;
 }
 #booking-popup .input_option {
     display: inline-flex;
@@ -186,6 +201,8 @@
     color: #000;
     font-size: 16px;
     font-weight: 700;
+    background: none;
+    cursor: pointer;
 }
 #booking-popup .input_option input {
     width: 24px;
@@ -193,4 +210,221 @@
     text-align: center;
     border: none;
     font-weight: 800;
+}
+#booking-popup button#close-popup i {
+    color: #fff;
+    line-height: 24px;
+}
+#seat-quantity-wrapper {
+    margin-bottom: 16px;
+}
+.chackout_page {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+}
+.payment_summary {
+    width: 530px;
+}
+.payemnt_info, .billing_info, .payment_summary {
+    background: #fff;
+    padding: 40px 32px;
+    margin-bottom: 32px;
+    border-radius: 30px;
+    border: 1px solid #BBA14E;
+}
+.chackout_page h3 {
+    font-size: 24px;
+    line-height: 24px;
+    font-family: 'Graphite geometos soft extra', sans-serif;
+    margin-bottom: 32px;
+}
+#stripe-payment label {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: block;
+}
+#card-element {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: border-color 0.3s ease;
+}
+#card-element.focused {
+    border-color: #BBA14E;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+#card-errors {
+    color: #fa755a;
+    margin-top: 10px;
+}
+.billing_info input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+.full_name {
+    display: flex;
+    gap: 24px;
+}
+.full_name div {
+    width: 100%;
+}
+.billing_info label {
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    display: block;
+}
+#checkout-form {
+    width: 100%;
+}
+.payment_summary h3 {
+    padding-bottom: 32px;
+    text-align: center;
+    border-bottom: 1px solid #DACFB3;
+}
+#payment-details h4 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1;
+}
+.table_plan, .vat_percentage, .total_price {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 32px;
+}
+#payment-details p {
+    font-size: 16px;
+    line-height: 1;
+    font-weight: 500;
+}
+#payment-details p.amount {
+    font-size: 20px;
+    font-family: 'Graphite geometos soft extra', sans-serif;
+}
+.total_price {
+    padding-top: 32px;
+    border-top: 1px dashed #DACFB3;
+}
+#payment-details .total_price .total_amount {
+    font-weight: 700;
+    font-size: 18px;
+}
+#payment-details button {
+    width: 100%;
+    background: #000;
+    color: #fff;
+    padding: 14px 12px;
+    border: 0;
+    text-transform: uppercase;
+    font-family: 'Graphite geometos soft extra', sans-serif;
+    cursor: pointer;
+}
+#error_massage p {
+    padding: 10px;
+    background: #fff;
+    margin-bottom: 30px;
+    border-left: 4px solid red;
+    color: red;
+}
+.payment-success {
+    padding: 50px;
+    max-width: 590px;
+    margin: auto;
+    border: 1px solid #DACFB3;
+    border-radius: 8px;
+}
+.payment-success i {
+    font-size: 40px;
+    color: #BBA14E;
+    margin-bottom: 24px;
+}
+.payment-success h2 {
+    font-size: 32px;
+    font-family: 'Graphite geometos soft extra', sans-serif;
+    margin-bottom: 16px;
+    line-height: 1;
+}
+.payment-success h4 {
+    font-size: 24px;
+    font-family: 'Graphite geometos soft extra', sans-serif;
+    margin-bottom: 32px;
+    line-height: 1;
+}
+.payment-details div {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+.payment-details p {
+    font-size: 16px;
+    line-height: 24px;
+}
+.payment-details {
+    padding-top: 32px;
+    border-top: 1px solid #DEDEDE;
+}
+.send_mail {
+    margin-top: 32px;
+}
+@media screen and (max-width: 1020px) {
+    #table-grid {
+        max-width: 640px;
+    }
+    .table_booking_grid .table {
+        height: 40px;
+        width: 40px;
+    }
+    .table_booking_grid .table p {
+        font-size: 16px;
+    }
+    .table_booking_grid .table.table-sold p {
+        font-size: 9px;
+    }
+    .plan_key .plan_color {
+        width: 40px;
+        height: 40px;
+    }
+}
+@media screen and (max-width: 767px) {
+    #table-grid {
+        max-width: 350px;
+        gap: 2px;
+    }
+    .table_booking_grid .table {
+        height: 20px;
+        width: 20px;
+    }
+    .table_booking_grid .table p {
+        font-size: 9px;
+    }
+    .table_booking_grid .table.table-sold p {
+        font-size: 5px;
+    }
+    .table_booking_grid .table p span{
+        font-size: 2px;
+    }
+    .plan_key .plan_color {
+        width: 20px;
+        height: 20px;
+    }
+    .plan_key {
+        gap: 5px;
+        max-width: 320px;
+    }
+    .chackout_page {
+        display: block;
+    }
+    .payment_summary {
+        width: 100%;
+    }
+    .payment-success {
+        padding: 30px;
+    }
 }

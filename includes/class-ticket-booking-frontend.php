@@ -19,7 +19,7 @@ class Ticket_Booking_Frontend {
 		wp_enqueue_script( 'ticket-booking-script', WP_TICKET_BOOKING_URL . 'assets/script.js', array( 'jquery' ), null, true );
 
 		wp_enqueue_script( 'stripe-js', 'https://js.stripe.com/v3/' );
-		wp_enqueue_script( 'ticket-booking-stripe', WP_TICKET_BOOKING_URL . 'assets/stripe-handler.js', array( 'jquery', 'stripe-js' ), null, true );
+		//wp_enqueue_script( 'ticket-booking-stripe', WP_TICKET_BOOKING_URL . 'assets/stripe-handler.js', array( 'jquery', 'stripe-js' ), null, true );
 
 		// Localize AJAX
 		wp_localize_script( 'ticket-booking-script', 'ticketBookingAjax', array(

@@ -27,7 +27,6 @@ class Ticket_Booking_Stripe {
 		$fname          = sanitize_text_field( $_POST['fname'] );
 		$lname          = sanitize_text_field( $_POST['lname'] );
 		$email          = sanitize_email( $_POST['email'] );
-		$phone          = sanitize_email( $_POST['phone'] );
 		$company_name   = sanitize_text_field( $_POST['company_name'] );
 
 		// Validate amount
@@ -47,7 +46,9 @@ class Ticket_Booking_Stripe {
 
 		$results = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE table_number = %d", $table_number ) );
 
-        if ( ! $results ) {
+		$order_id = uniqid();
+
+		if ( ! $results ) {
 			wp_send_json_error( 'Table not found.' );
 		}
 
@@ -67,30 +68,31 @@ class Ticket_Booking_Stripe {
 			[ 'table_number' => sanitize_text_field( $table_number ) ]
 		);
 
-        // Set Stripe API key
-        \Stripe\Stripe::setApiKey( $stripe_secret_key );
+		// Set Stripe API key
+		\Stripe\Stripe::setApiKey( $stripe_secret_key );
 
-        try {
-            $payment_intent = \Stripe\PaymentIntent::create( [ 
-                'amount'              => $amount,
-                'currency'            => get_option( 'stripe_currency', 'gbp' ), // Default to GBP
-                'payment_method'      => $payment_method,
-                'confirmation_method' => 'manual',
-                'confirm'             => true,
-                'return_url'          => site_url( '/payment-return' ), // URL to handle redirects after payment
-                'metadata'            => [ 
-                    'table_number'  => $table_number,
-                    'seat_quantity' => $seat_quantity,
-                    'table_type'    => $table_type,
-                    'first_name'    => $fname,
-                    'last_name'     => $lname,
-                    'email'         => $email,
-                    'phone'         => $phone,
-                    'company_name'  => $company_name,
-                ],
-            ] );
+		try {
+			$payment_intent = \Stripe\PaymentIntent::create( [ 
+				'amount'              => $amount,
+				'currency'            => get_option( 'stripe_currency', 'gbp' ), // Default to GBP
+				'payment_method'      => $payment_method,
+				'confirmation_method' => 'manual',
+				'confirm'             => true,
+				'return_url'          => site_url( '/payment-return' ),
+				'metadata'            => [ 
+					'table_number'  => $table_number,
+					'seat_quantity' => $seat_quantity,
+					'table_type'    => $table_type,
+					'first_name'    => $fname,
+					'last_name'     => $lname,
+					'email'         => $email,
+					'company_name'  => $company_name,
+					'order_id'      => $order_id,
+					'order_date'    => date( 'Y-m-d H:i:s' ),
+				],
+			] );
 
-			
+
 
 			if ( $table_type === 'full' ) {
 				$table_type_text = 'Full Table';
@@ -109,48 +111,48 @@ class Ticket_Booking_Stripe {
 					'fname'           => sanitize_text_field( $fname ),
 					'lname'           => sanitize_text_field( $lname ),
 					'email'           => sanitize_email( $email ),
-					'phone'           => sanitize_text_field( $phone ),
 					'company_name'    => sanitize_text_field( $company_name ),
 					'table_type'      => sanitize_text_field( $table_type_text ),
 					'number_of_seats' => intval( $seat_quantity ),
 					'payment_status'  => 'Confirmed',
 					'amount'          => floatval( $amount / 100 ),
-					'payment_id'	  => sanitize_text_field( $payment_intent->id ),
+					'payment_id'      => sanitize_text_field( $payment_intent->id ),
+					'order_id'        => sanitize_text_field( $order_id ),
 				],
-				[ '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%f', '%s' ]
+				[ '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%f', '%s', '%s' ]
 			);
 
-            wp_send_json_success( [ 
-                'payment_intent' => $payment_intent,
-                'redirect_url'   => site_url( '/payment-return' ),
-            ] );
-        } catch (\Stripe\Exception\ApiErrorException $e) {
-			$results = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE table_number = %d", $table_number ) );
-            $sell_seats = $results->sell_seats - $seat_quantity;
-            $wpdb->update(
-                $table_name,
-                [ 
-                    'sell_seats'   => $sell_seats,
-                    'table_status' => ( $sell_seats < 10 ) ? 'Unsold' : 'Sold',
-                ],
-                [ 'table_number' => sanitize_text_field( $table_number ) ]
-            );
-            
-            wp_send_json_error( $e->getMessage() );
-        } catch (Exception $e) {
-			$results = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE table_number = %d", $table_number ) );
-            $sell_seats = $results->sell_seats - $seat_quantity;
-            $wpdb->update(
-                $table_name,
-                [ 
-                    'sell_seats'   => $sell_seats,
-                    'table_status' => ( $sell_seats < 10 ) ? 'Unsold' : 'Sold',
-                ],
-                [ 'table_number' => sanitize_text_field( $table_number ) ]
-            );
+			wp_send_json_success( [ 
+				'payment_intent' => $payment_intent,
+				'redirect_url'   => site_url( '/payment-return' ),
+			] );
+		} catch (\Stripe\Exception\ApiErrorException $e) {
+			$results    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE table_number = %d", $table_number ) );
+			$sell_seats = $results->sell_seats - $seat_quantity;
+			$wpdb->update(
+				$table_name,
+				[ 
+					'sell_seats'   => $sell_seats,
+					'table_status' => ( $sell_seats < 10 ) ? 'Unsold' : 'Sold',
+				],
+				[ 'table_number' => sanitize_text_field( $table_number ) ]
+			);
 
-            wp_send_json_error( 'An error occurred: ' . $e->getMessage() );
-        }
+			wp_send_json_error( $e->getMessage() );
+		} catch (Exception $e) {
+			$results    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE table_number = %d", $table_number ) );
+			$sell_seats = $results->sell_seats - $seat_quantity;
+			$wpdb->update(
+				$table_name,
+				[ 
+					'sell_seats'   => $sell_seats,
+					'table_status' => ( $sell_seats < 10 ) ? 'Unsold' : 'Sold',
+				],
+				[ 'table_number' => sanitize_text_field( $table_number ) ]
+			);
+
+			wp_send_json_error( 'An error occurred: ' . $e->getMessage() );
+		}
 	}
 
 	public function payment_return_handler() {
@@ -174,10 +176,10 @@ class Ticket_Booking_Stripe {
 			$payment_intent = \Stripe\PaymentIntent::retrieve( $payment_intent_id );
 
 			if ( $payment_intent->status === 'succeeded' ) {
-				return '<h2>Payment Successful!</h2>
-                    <p>Thank you for your payment. Your booking is confirmed.</p>';
+				// print_r($payment_intent);
+				return '<div class="payment-success"><i class="fa-regular fa-circle-check"></i><h2>Thank you!</h2><h4>Your booking has been confirmed.</h4><div class="payment-details"><div class="booking"><p>Booking number: </p><p><b>' . esc_html( $payment_intent->metadata['order_id'] ) . '</b></p></div><div class="order"><p>Order date: </p><p><b>' . date("M j, Y", strtotime(esc_html( $payment_intent->metadata['order_date'] ))) . '</b></p></div><p class="send_mail">We have sent detailed information about the order confirmation to your email <b>' . esc_html( $payment_intent->metadata['email'] ) . '</b></p></div></div>';
 			} elseif ( $payment_intent->status === 'requires_payment_method' ) {
-                return '<h2>Payment Failed</h2><p>Please try again with a different payment method.</p>';
+				return '<h2>Payment Failed</h2><p>Please try again with a different payment method.</p>';
 			} else {
 				return '<h2>Payment Pending</h2><p>Your payment is being processed. Please wait.</p>';
 			}

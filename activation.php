@@ -16,13 +16,14 @@ function create_ticket_booking_tables() {
         fname VARCHAR(255) NOT NULL,
         lname VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL,
-        phone VARCHAR(20) NOT NULL,
         company_name VARCHAR(50) NOT NULL,
         table_type ENUM('Full Table', 'Half Table', 'Individual') NOT NULL,
         number_of_seats INT(11) NOT NULL,
         payment_status ENUM('Confirmed', 'Pending', 'Refund', 'Failed', 'Canceled') DEFAULT 'Pending',
         amount DECIMAL(10,2) DEFAULT 0.00,
         payment_id VARCHAR(255) NOT NULL,
+        order_id VARCHAR(255) NOT NULL,
+        order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (id)
     ) $charset_collate;";
 
