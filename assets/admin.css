@@ -1,6 +1,14 @@
-#add-table-popup,
-#edit-table-popup {
+#add-table-popup, #edit-table-popup {
     display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    position: absolute;
+    left: 0;
+    background: #ffffff85;
+}
+.popup_main_container{
     position: fixed;
     top: 50%;
     left: 50%;
@@ -9,4 +17,23 @@
     border: 1px solid #ccc;
     padding: 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 350px;
+}
+#order_info p span {
+    font-weight: 700;
+}
+#add-table-popup label,
+#edit-table-popup label {
+    display: block;
+    margin-bottom: 8px;
+}
+#add-table-popup input,
+#add-table-popup select,
+#edit-table-popup input,
+#edit-table-popup select {
+    width: 100%;
+    margin-bottom: 8px;
+}
+.table_button {
+    text-align: right;
 }

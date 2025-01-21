@@ -89,10 +89,7 @@ class Ticket_Booking_Admin {
 	}
 
 	public function render_dashboard_page() {
-		// Dashboard page implementation
-		?>
-		<h3>This is dashboard</h3>
-		<?php
+		require_once WP_TICKET_BOOKING_PATH . 'includes/views/dashboard.php';
 	}
 
 	public function render_sell_details_page() {
@@ -138,6 +135,20 @@ class Ticket_Booking_Admin {
         $stripe_public_key = get_option( 'stripe_public_key', '' );
         $stripe_client_secret = get_option( 'stripe_client_secret', '' );
 
+		// Reset database
+		// my database is 'ticket_details' and 'ticket_bookings'
+		if ( isset( $_POST['reset_database'] ) ) {
+			check_admin_referer( 'ticket_booking_reset_database' );
+
+			global $wpdb;
+			$table_name = $wpdb->prefix . 'ticket_details';
+			$wpdb->query( "TRUNCATE TABLE $table_name" );
+
+			$table_name = $wpdb->prefix . 'ticket_bookings';
+			$wpdb->query( "TRUNCATE TABLE $table_name" );
+
+			echo '<div class="notice notice-warning"><p>Database reset successfully!</p></div>';
+		}
 		require_once WP_TICKET_BOOKING_PATH . 'includes/views/setting.php';
 	}
 }

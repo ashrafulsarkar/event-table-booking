@@ -23,50 +23,58 @@ $tables = $wpdb->get_results( "SELECT * FROM $table_name" );
 	<button id="add-table-btn" class="page-title-action">Add Table</button>
 
 	<div id="add-table-popup" style="display: none;">
-		<form id="add-table-form">
-			<h2>Add New Table</h2>
-			<label for="table_number">Table Number:</label>
-			<input type="number" id="table_number" name="table_number" required>
-			<br>
-			<label for="table_status">Table Status:</label>
-			<select id="table_status" name="table_status">
-				<option value="Unsold">Unsold</option>
-				<option value="Sold">Sold</option>
-			</select>
-			<br>
-			<label for="table_type">Table Type:</label>
-			<select id="table_type" name="table_type">
-				<option value="Full Table">Full Table</option>
-				<option value="Half Table">Half Table</option>
-				<option value="Individual">Individual</option>
-			</select>
-			<br><br>
-			<button type="button" id="close-popup" class="button">Cancel</button>
-			<button type="submit" class="button button-primary">Save Table</button>
-		</form>
+		<div class="popup_main_container">
+			<form id="add-table-form">
+				<h2>Add New Table</h2>
+				<label for="table_number">Table Number:</label>
+				<input type="number" id="table_number" name="table_number" required>
+				<br>
+				<label for="table_status">Table Status:</label>
+				<select id="table_status" name="table_status">
+					<option value="Unsold">Unsold</option>
+					<option value="Sold">Sold</option>
+				</select>
+				<br>
+				<label for="table_type">Table Type:</label>
+				<select id="table_type" name="table_type">
+					<option value="Full Table">Full Table</option>
+					<option value="Half Table">Half Table</option>
+					<option value="Individual">Individual</option>
+				</select>
+				<br><br>
+				<div class="table_button">
+					<button type="button" id="close-popup" class="button">Cancel</button>
+					<button type="submit" class="button button-primary">Save Table</button>
+				</div>
+			</form>
+		</div>
 	</div>
     <div id="edit-table-popup" style="display: none;">
-		<form id="edit-table-form">
-			<h2>Edit Table</h2>
-			<label for="edit_table_number">Table Number:</label>
-			<input type="number" id="edit_table_number" name="table_number" readonly>
-			<br>
-			<label for="edit_table_status">Table Status:</label>
-			<select id="edit_table_status" name="table_status">
-				<option value="Unsold">Unsold</option>
-				<option value="Sold">Sold</option>
-			</select>
-			<br>
-			<label for="edit_table_type">Table Type:</label>
-			<select id="edit_table_type" name="table_type">
-				<option value="Full Table">Full Table</option>
-				<option value="Half Table">Half Table</option>
-				<option value="Individual">Individual</option>
-			</select>
-			<br><br>
-			<button type="button" id="edit_close-popup" class="button">Cancel</button>
-			<button type="submit" class="button button-primary">Edit Table</button>
-		</form>
+		<div class="popup_main_container">
+			<form id="edit-table-form">
+				<h2>Edit Table</h2>
+				<label for="edit_table_number">Table Number:</label>
+				<input type="number" id="edit_table_number" name="table_number" readonly>
+				<br>
+				<label for="edit_table_status">Table Status:</label>
+				<select id="edit_table_status" name="table_status">
+					<option value="Unsold">Unsold</option>
+					<option value="Sold">Sold</option>
+				</select>
+				<br>
+				<label for="edit_table_type">Table Type:</label>
+				<select id="edit_table_type" name="table_type">
+					<option value="Full Table">Full Table</option>
+					<option value="Half Table">Half Table</option>
+					<option value="Individual">Individual</option>
+				</select>
+				<br><br>
+				<div class="table_button">
+					<button type="button" id="edit_close-popup" class="button">Cancel</button>
+					<button type="submit" class="button button-primary">Edit Table</button>
+				</div>
+			</form>
+		</div>
 	</div>
 
 	

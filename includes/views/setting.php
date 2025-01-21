@@ -68,4 +68,12 @@
 			<button type="submit" name="save_prices" class="button button-primary">Save Changes</button>
 		</p>
 	</form>
+
+	<!-- reset database -->
+	<form method="POST">
+		<?php wp_nonce_field( 'ticket_booking_reset_database' ); ?>
+		<p class="submit">
+			<button type="submit" name="reset_database" class="button button-secondary" onclick="return confirm('Denger: Are you sure you want to reset the database? You will lose your all booking information.');">Reset Database</button>
+		</p>
+	</form>
 </div>
