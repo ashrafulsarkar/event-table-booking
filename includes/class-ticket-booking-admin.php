@@ -19,7 +19,7 @@ class Ticket_Booking_Admin {
 			'ticket-booking-dashboard',
 			array( $this, 'render_dashboard_page' ),
 			'dashicons-tickets',
-			20
+			5
 		);
 
 		add_submenu_page(
