@@ -83,6 +83,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             const payment_id = $('#payment_id').val();
             const number_of_seats = $('#number_of_seats').val();
             const table_number = $('#table_number').val();
+            const order_id = $('#order_id').val();
 
             if (!payment_id || !number_of_seats || !table_number) {
                 alert('Missing necessary information for refund.');
@@ -93,11 +94,12 @@ if ( ! defined( 'ABSPATH' ) ) {
                 action: 'refund_order',
                 table_number: table_number,
                 payment_id: payment_id,
+                order_id: order_id,
                 number_of_seats: number_of_seats,
                 security: ticketBookingAjax.ajax_nonce
             }, function (response) {
                 if (response.success) {
-                    alert('Order refunded successfully');
+                    alert('Order refunded successfully!');
                     location.reload();
                 } else {
                     alert('Error: ' + response.data.message);
