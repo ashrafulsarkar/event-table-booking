@@ -15,20 +15,9 @@
     display: grid;
     gap: 10px;
     justify-items: center;
-    max-width: 900px;
+    max-width: 830px;
     margin: auto;
-    grid-template-columns: repeat(13, 1fr);
-}
-.table_booking_grid .table:nth-child(37) {
-    grid-row: 4;
-    grid-column: 1 !important;
-}
-.table_booking_grid .table:nth-child(1), .table_booking_grid .table:nth-child(12n+1),
-.table_booking_grid .table:nth-child(12n + 50) {
-    grid-column: 2;
-}
-.table_booking_grid .table:nth-child(12n + 49) {
-    grid-column: 13;
+    grid-template-columns: repeat(12, 1fr);
 }
 .table_booking_grid .table h5,
 .table_booking_grid .table p {
