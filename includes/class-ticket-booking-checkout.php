@@ -7,10 +7,10 @@ class Ticket_Booking_Checkout {
 
 	public function render_checkout_page() {
 		if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
-            $table_number = isset($_POST['table_number']) ? sanitize_text_field($_POST['table_number']) : '';
-		    $seat_quantity = isset($_POST['seat_quantity']) ? intval($_POST['seat_quantity']) : 0;
-		    $table_type = isset($_POST['table_type']) ? sanitize_text_field($_POST['table_type']) : '';
-		    $price = isset($_POST['price']) ? floatval($_POST['price']) : 0;
+			$table_number  = isset( $_POST['table_number'] ) ? sanitize_text_field( $_POST['table_number'] ) : '';
+			$seat_quantity = isset( $_POST['seat_quantity'] ) ? intval( $_POST['seat_quantity'] ) : 0;
+			$table_type    = isset( $_POST['table_type'] ) ? sanitize_text_field( $_POST['table_type'] ) : '';
+			$price         = isset( $_POST['price'] ) ? floatval( $_POST['price'] ) : 0;
 
 			ob_start();
 			?>
@@ -18,15 +18,38 @@ class Ticket_Booking_Checkout {
 			<div class="chackout_page">
 				<div id="checkout-form">
 					<div class="payemnt_info">
-						<div id="stripe-payment">
-							<div id="card-errors" role="alert"></div>
-							<h3>Payment info</h3>
-							<label for="card-element">Enter your card details:</label>
-							<div id="card-element"></div>
+						<h3>Payment info</h3>
+						<div class="payment_method">
+							<div class="payment_card">
+								<div class="payment_option">
+									<input type="radio" id="stripe" name="payment_method" value="Card" checked>
+									<label for="stripe">Card</label>
+								</div>
+								<div id="stripe-payment">
+									<div id="card-errors" role="alert"></div>
+									<label for="card-element">Enter your card details:</label>
+									<div id="card-element"></div>
+								</div>
+							</div>
+							<div class="payment_option">
+								<input type="radio" id="bank_deposit" name="payment_method" value="Bank Deposit">
+								<label for="bank_deposit">Bank Deposit</label>
+							</div>
 						</div>
 					</div>
 					<div class="billing_info">
 						<h3>Billing info</h3>
+						<div class="location">
+							<label for="location">Location*</label>
+							<select id="location" name="location" required>
+								<option value="United Kingdom" selected>United Kingdom</option>
+								<option value="Outside UK">Outside UK</option>
+							</select>
+						</div>
+						<div class="bin_number" id="bin_number_div" style="display: none;">
+							<label for="bin_number">Business ID Number*</label>
+							<input type="text" id="bin_number" name="bin_number" required>
+						</div>
 						<div class="full_name">
 							<div class="first_name">
 								<label for="fname">First name*</label>
@@ -48,7 +71,7 @@ class Ticket_Booking_Checkout {
 					<div id="payment-details">
 						<h4>Table plan</h4>
 						<?php
-						if ($table_type == 'full') {
+						if ( $table_type == 'full' ) {
 							$table_type_text = 'Table of 10 seats';
 						} elseif ( $table_type == 'half' ) {
 							$table_type_text = 'Table of 5 seats';
@@ -57,32 +80,78 @@ class Ticket_Booking_Checkout {
 						}
 						?>
 						<div class="table_plan">
-							<p class="table_type"><?php echo esc_html($table_type_text);?> x<span id="seat-quantity"><?php echo esc_html($seat_quantity);?></span></p>
-							<p class="amount">£<span id="price"><?php echo esc_html(number_format($price, 2, '.', ''));?></span></p>
+							<p class="table_type"><?php echo esc_html( $table_type_text ); ?> x<span id="seat-quantity"><?php echo esc_html( $seat_quantity ); ?></span></p>
+							<p class="amount">£<span id="price"><?php echo esc_html( number_format( $price, 2, '.', '' ) ); ?></span></p>
 						</div>
 						<div class="vat_percentage">
-							<?php 
-							$vat_percentage = get_option( 'ticket_booking_vat_percentage', '0' );
-							$total_vat = ($price * $vat_percentage) / 100;
-							?>
-							<p>VAT (<?php echo $vat_percentage;?>%)</p>
-							<p class="amount">£<span id="vat"><?php echo number_format($total_vat, 2, '.', '');?></span></p>
+							<p>VAT (<span id="vat_percentage"></span>%)</p>
+							<p class="amount">£<span id="vat"></span></p>
 						</div>
 						<div class="total_price">
 							<p class="total_amount">Total</p>
-							<p class="amount">£<span id="total_price"><?php echo number_format(($price + $total_vat), 2, '.', '');?></span></p>
+							<p class="amount">£<span id="total_price"></span></p>
 						</div>
-						<input type="hidden" id="table_number" value="<?php echo esc_attr($table_number);?>">
-						<input type="hidden" id="table-type" value="<?php echo esc_attr($table_type);?>">
+						<input type="hidden" id="table_number" value="<?php echo esc_attr( $table_number ); ?>">
+						<input type="hidden" id="table-type" value="<?php echo esc_attr( $table_type ); ?>">
 						<button id="pay-now-button" class="button">Pay Now</button>
+						<button id="book-now-button" class="button" style="display: none;">Book Now</button>
 					</div>
 				</div>
 			</div>
 			<script>
+				function calculateVAT() {
+					let vatPercentage = 0;
+					const location = document.getElementById('location').value;
+					if (location === 'Outside UK') {
+						vatPercentage = 0;
+					} else {
+						vatPercentage = <?php echo get_option( 'ticket_booking_vat_percentage', '0' ); ?>;
+					}
+
+					const price = parseFloat(document.getElementById('price').innerText);
+					const totalVat = (price * vatPercentage) / 100;
+
+					document.getElementById('vat').innerText = totalVat.toFixed(2);
+					document.getElementById('vat_percentage').innerText = vatPercentage;
+					document.getElementById('total_price').innerText = (price + totalVat).toFixed(2);
+				}
+
+				// Initial calculation on page load
+				document.addEventListener('DOMContentLoaded', function () {
+					calculateVAT();
+				});
+
+				// Recalculate VAT when location changes
+				document.getElementById('location').addEventListener('change', function () {
+					calculateVAT();
+				});
+				//when location value will be outside UK then show bin_number field
+				document.getElementById('location').addEventListener('change', function () {
+					if (this.value === 'Outside UK') {
+						document.getElementById('bin_number_div').style.display = 'block';
+					} else {
+						document.getElementById('bin_number_div').style.display = 'none';
+					}
+				});
 				// Pass PHP data to JavaScript (use WordPress functions).
 				<?php
 				$stripe_public_key = get_option( 'stripe_public_key', '' );
 				?>
+				//payment_option hide/show
+				document.querySelectorAll('.payment_option').forEach(function (element) {
+					element.addEventListener('click', function () {
+						if (element.querySelector('input').value === 'bank_deposit') {
+							document.getElementById('stripe-payment').style.display = 'none';
+							document.getElementById('book-now-button').style.display = 'block';
+							document.getElementById('pay-now-button').style.display = 'none';
+						} else {
+							document.getElementById('stripe-payment').style.display = 'block';
+							document.getElementById('book-now-button').style.display = 'none';
+							document.getElementById('pay-now-button').style.display = 'block';
+						}
+					});
+				});
+
 				const checkoutData = <?php echo json_encode( [ 
 					'ajax_url'        => admin_url( 'admin-ajax.php' ),
 					'publishable_key' => $stripe_public_key,
@@ -92,7 +161,7 @@ class Ticket_Booking_Checkout {
 					// Initialize Stripe
 					const stripe = Stripe(checkoutData.publishable_key);
 					const elements = stripe.elements();
-					
+
 					const card = elements.create('card', {
 						style: {
 							base: {
@@ -124,14 +193,29 @@ class Ticket_Booking_Checkout {
 						payNowButton.style.cursor = 'not-allowed';
 						payNowButton.style.opacity = '0.5';
 						// Collect form data
-						const totalPrice = document.getElementById('total_price').innerText.trim();
-						const seatQuantity = document.getElementById('seat-quantity').innerText.trim();
 						const tableNumber = document.getElementById('table_number').value.trim();
-						const tableType = document.getElementById('table-type').value.trim();
 						const fname = document.getElementById('fname').value.trim();
 						const lname = document.getElementById('lname').value.trim();
 						const email = document.getElementById('email').value.trim();
 						const companyName = document.getElementById('cname').value.trim();
+						const tableType = document.getElementById('table-type').value.trim();
+						const seatQuantity = document.getElementById('seat-quantity').innerText.trim();
+						const payMethod = document.querySelector('input[name="payment_method"]:checked').value;
+						const location = document.getElementById('location').value.trim();
+						const binNumber = document.getElementById('bin_number').value.trim();
+						const totalPrice = document.getElementById('total_price').innerText.trim();
+						const vatAmount = document.getElementById('vat').value.trim();
+						const vatPercentage = document.getElementById('vat_percentage').innerText.trim();
+
+						//when location value will be outside UK then bin_number field will be required
+						if (location === 'Outside UK' && !binNumber) {
+							document.getElementById('error_massage').innerHTML = '<p>Please fill out all required fields.</p>';
+							payNowButton.disabled = false;
+							payNowButton.textContent = 'Pay Now';
+							payNowButton.style.cursor = 'pointer';
+							payNowButton.style.opacity = '1';
+							return;
+						}
 
 						// Validate fields
 						if (!totalPrice || !tableNumber || !tableType || !fname || !lname || !email) {
@@ -160,7 +244,7 @@ class Ticket_Booking_Checkout {
 							payNowButton.style.cursor = 'pointer';
 							payNowButton.style.opacity = '1';
 							return;
-						}        
+						}
 
 						jQuery.ajax({
 							url: checkoutData.ajax_url,
@@ -168,25 +252,30 @@ class Ticket_Booking_Checkout {
 							data: {
 								action: 'process_payment',
 								payment_method: paymentMethod.id,
-								amount: totalPrice * 100,
 								table_number: tableNumber,
-								seat_quantity: seatQuantity,
-								table_type: tableType,
 								fname: fname,
 								lname: lname,
 								email: email,
 								company_name: companyName,
+								table_type: tableType,
+								seat_quantity: seatQuantity,
+								payMethod: payMethod,
+								location: location,
+								bin_number: binNumber,
+								total_amount: totalPrice * 100,
+								total_vat: vatAmount,
+								vatPercentage: vatPercentage,
 							},
 							success: function (response) {
 								if (response.success) {
-									window.location.href = response.data.redirect_url+'?payment_intent='+response.data.payment_intent.id;
+									window.location.href = response.data.redirect_url + '?payment_intent=' + response.data.payment_intent.id;
 								} else {
 									payNowButton.disabled = false;
 									payNowButton.textContent = 'Pay Now';
 									payNowButton.style.cursor = 'pointer';
 									payNowButton.style.opacity = '1';
 									document.getElementById('error_massage').innerHTML = '<p>Payment failed.</p>';
-									console.log('Payment failed: ' + response.data);                    
+									console.log('Payment failed: ' + response.data);
 								}
 							},
 							error: function (xhr, status, error) {
@@ -194,12 +283,98 @@ class Ticket_Booking_Checkout {
 								payNowButton.textContent = 'Pay Now';
 								payNowButton.style.cursor = 'pointer';
 								payNowButton.style.opacity = '1';
-								document.getElementById('error_massage').innerHTML = '<p>Payment failed.</p>';								
+								document.getElementById('error_massage').innerHTML = '<p>Payment failed.</p>';
 								console.log('Payment failed: ' + error);
 							},
 						});
 					});
-				});
+
+					const bookNowButton = document.getElementById('book-now-button');
+					bookNowButton.addEventListener('click', async function (event) {
+						event.preventDefault();
+
+						// Disable the button to prevent duplicate clicks
+						bookNowButton.disabled = true;
+						bookNowButton.textContent = 'Processing...';
+						bookNowButton.style.cursor = 'not-allowed';
+						bookNowButton.style.opacity = '0.5';
+
+						// Collect form data
+						const tableNumber = document.getElementById('table_number').value.trim();
+						const fname = document.getElementById('fname').value.trim();
+						const lname = document.getElementById('lname').value.trim();
+						const email = document.getElementById('email').value.trim();
+						const companyName = document.getElementById('cname').value.trim();
+						const tableType = document.getElementById('table-type').value.trim();
+						const seatQuantity = document.getElementById('seat-quantity').innerText.trim();
+						const payMethod = document.querySelector('input[name="payment_method"]:checked').value;
+						const location = document.getElementById('location').value.trim();
+						const binNumber = document.getElementById('bin_number').value.trim();
+						const totalPrice = document.getElementById('total_price').innerText.trim();
+						const vatAmount = document.getElementById('vat').value.trim();
+						const vatPercentage = document.getElementById('vat_percentage').innerText.trim();
+
+						//when location value will be outside UK then bin_number field will be required
+						if (location === 'Outside UK' && !binNumber) {
+							document.getElementById('error_massage').innerHTML = '<p>Please fill out all required fields.</p>';
+							bookNowButton.disabled = false;
+							bookNowButton.textContent = 'Book Now';
+							bookNowButton.style.cursor = 'pointer';
+							bookNowButton.style.opacity = '1';
+							return;
+						}
+
+						// Validate fields
+						if (!totalPrice || !tableNumber || !tableType || !fname || !lname || !email ) {
+							document.getElementById('error_massage').innerHTML = '<p>Please fill out all required fields.</p>';
+							bookNowButton.disabled = false;
+							bookNowButton.textContent = 'Book Now';
+							bookNowButton.style.cursor = 'pointer';
+							bookNowButton.style.opacity = '1';
+							return;
+						}
+
+						jQuery.ajax({
+							url: checkoutData.ajax_url,
+							method: 'POST',
+							data: {
+								action: 'process_booking',
+								table_number: tableNumber,
+								fname: fname,
+								lname: lname,
+								email: email,
+								company_name: companyName,
+								table_type: tableType,
+								seat_quantity: seatQuantity,
+								payMethod: payMethod,
+								location: location,
+								bin_number: binNumber,
+								total_amount: totalPrice * 100,
+								total_vat: vatAmount,
+								vatPercentage: vatPercentage,
+							},
+							success: function (response) {
+								if (response.success) {
+									window.location.href = response.data.redirect_url + '?order_id=' + response.data.order_id;
+								} else {
+									bookNowButton.disabled = false;
+									bookNowButton.textContent = 'Book Now';
+									bookNowButton.style.cursor = 'pointer';
+									bookNowButton.style.opacity = '1';
+									document.getElementById('error_massage').innerHTML = '<p>Booking failed.</p>';
+									console.log('Booking failed: ' + response.data);
+								}
+							},
+							error: function (xhr, status, error) {
+								bookNowButton.disabled = false;
+								bookNowButton.textContent = 'Book Now';
+								bookNowButton.style.cursor = 'pointer';
+								bookNowButton.style.opacity = '1';
+								document.getElementById('error_massage').innerHTML = '<p>Booking failed.</p>';
+								console.log('Booking failed: ' + error);
+							},
+						});
+					});
 
 			</script>
 

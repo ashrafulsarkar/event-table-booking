@@ -19,11 +19,17 @@ function create_ticket_booking_tables() {
         company_name VARCHAR(50) NOT NULL,
         table_type ENUM('Full Table', 'Half Table', 'Individual') NOT NULL,
         number_of_seats INT(11) NOT NULL,
+        payment_method ENUM('Card', 'Bank Deposit') DEFAULT 'Card',
         payment_status ENUM('Confirmed', 'Pending', 'Refund', 'Failed', 'Canceled') DEFAULT 'Pending',
-        amount DECIMAL(10,2) DEFAULT 0.00,
-        payment_id VARCHAR(255) NOT NULL,
+        company_location ENUM('United Kingdom', 'Outside UK') DEFAULT 'United Kingdom',
+        bin_number VARCHAR(255) DEFAULT NULL,
+        total_amount DECIMAL(10,2) DEFAULT 0.00,
+        total_vat DECIMAL(10,2) DEFAULT 0.00,
+        vat_percentage SMALLINT(5) NOT NULL,
+        payment_id VARCHAR(255) DEFAULT NULL,
         order_id VARCHAR(255) NOT NULL,
         order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id)
     ) $charset_collate;";
 

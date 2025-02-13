@@ -17,11 +17,10 @@ class Ticket_Send_Mail {
 		$email           = $order->email;
 		$table_type      = $order->table_type;
 		$number_of_seats = $order->number_of_seats;
-		$amount          = $order->amount;
+		$total_amount    = $order->total_amount;
 		$order_id        = $order->order_id;
-		$tax_persent     = get_option( 'ticket_booking_vat_percentage' );
-
-		$tax = ( $amount * $tax_persent ) / ( 100 + $tax_persent );
+		$total_vat       = $order->total_vat;
+		$tax_persent     = $order->vat_percentage;
 
 		$subject = 'Fresh Award Booking Confirmation! - ' . $order_id;
 
@@ -64,15 +63,15 @@ class Ticket_Send_Mail {
 						</tr>
 						<tr>
 							<td style="font-size: 1em;padding-bottom: 10px;">Subtotal:</td>
-							<td style="text-align: right;font-size: 1em;padding-bottom: 10px;">£' . number_format( ( $amount - $tax ), 2 ) . '</td>
+							<td style="text-align: right;font-size: 1em;padding-bottom: 10px;">£' . number_format( ( $total_amount - $total_vat ), 2 ) . '</td>
 						</tr>
 						<tr>
 							<td style="font-size: 1em;padding-bottom: 10px;">Tax (' . $tax_persent . '%):</td>
-							<td style="text-align: right;font-size: 1em;padding-bottom: 10px;">£' . number_format( $tax, 2 ) . '</td>
+							<td style="text-align: right;font-size: 1em;padding-bottom: 10px;">£' . number_format( $total_vat, 2 ) . '</td>
 						</tr>
 						<tr>
 							<td style="font-size: 1em; font-weight: 700;">Order Total:</td>
-							<td style="text-align: right;font-size: 1em; font-weight: 700;">£' . number_format( $amount, 2 ) . '</td>
+							<td style="text-align: right;font-size: 1em; font-weight: 700;">£' . number_format( $total_amount, 2 ) . '</td>
 						</tr>
 					</table>
 				</div>

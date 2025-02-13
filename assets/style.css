@@ -19,6 +19,17 @@
     margin: auto;
     grid-template-columns: repeat(12, 1fr);
 }
+#table-grid > p {
+    grid-column: 5/9;
+}
+.payment_option {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.payment_card {
+    margin-bottom: 16px;
+}
 .table_booking_grid .table h5,
 .table_booking_grid .table p {
     margin: 0;
