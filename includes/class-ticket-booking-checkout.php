@@ -133,14 +133,11 @@ class Ticket_Booking_Checkout {
 						document.getElementById('bin_number_div').style.display = 'none';
 					}
 				});
-				// Pass PHP data to JavaScript (use WordPress functions).
-				<?php
-				$stripe_public_key = get_option( 'stripe_public_key', '' );
-				?>
+
 				//payment_option hide/show
 				document.querySelectorAll('.payment_option').forEach(function (element) {
 					element.addEventListener('click', function () {
-						if (element.querySelector('input').value === 'bank_deposit') {
+						if (element.querySelector('input').value === 'Bank Deposit') {
 							document.getElementById('stripe-payment').style.display = 'none';
 							document.getElementById('book-now-button').style.display = 'block';
 							document.getElementById('pay-now-button').style.display = 'none';
@@ -152,6 +149,11 @@ class Ticket_Booking_Checkout {
 					});
 				});
 
+				// Pass PHP data to JavaScript (use WordPress functions).
+				<?php
+				$stripe_public_key = get_option( 'stripe_public_key', '' );
+				?>
+				
 				const checkoutData = <?php echo json_encode( [ 
 					'ajax_url'        => admin_url( 'admin-ajax.php' ),
 					'publishable_key' => $stripe_public_key,
@@ -204,7 +206,7 @@ class Ticket_Booking_Checkout {
 						const location = document.getElementById('location').value.trim();
 						const binNumber = document.getElementById('bin_number').value.trim();
 						const totalPrice = document.getElementById('total_price').innerText.trim();
-						const vatAmount = document.getElementById('vat').value.trim();
+						const vatAmount = document.getElementById('vat').innerText.trim();
 						const vatPercentage = document.getElementById('vat_percentage').innerText.trim();
 
 						//when location value will be outside UK then bin_number field will be required
@@ -311,7 +313,7 @@ class Ticket_Booking_Checkout {
 						const location = document.getElementById('location').value.trim();
 						const binNumber = document.getElementById('bin_number').value.trim();
 						const totalPrice = document.getElementById('total_price').innerText.trim();
-						const vatAmount = document.getElementById('vat').value.trim();
+						const vatAmount = document.getElementById('vat').innerText.trim();
 						const vatPercentage = document.getElementById('vat_percentage').innerText.trim();
 
 						//when location value will be outside UK then bin_number field will be required
@@ -375,7 +377,7 @@ class Ticket_Booking_Checkout {
 							},
 						});
 					});
-
+				});
 			</script>
 
 			<?php

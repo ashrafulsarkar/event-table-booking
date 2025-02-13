@@ -80,7 +80,7 @@ class Ticket_Booking_List_Table extends WP_List_Table {
 			'table_type'      => __( 'Type', 'textdomain' ),
 			'number_of_seats' => __( 'Booked Seats', 'textdomain' ),
 			'payment_status'  => __( 'Payment Status', 'textdomain' ),
-			'amount'          => __( 'Amount', 'textdomain' ),
+			'total_amount'    => __( 'Amount', 'textdomain' ),
 			'order_id'        => __( 'Order ID', 'textdomain' ),
 			'payment_id'      => __( 'Payment ID', 'textdomain' ),
 			'order_date'      => __( 'Date', 'textdomain' ),
