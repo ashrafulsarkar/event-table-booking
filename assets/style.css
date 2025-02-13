@@ -23,12 +23,73 @@
     grid-column: 5/9;
 }
 .payment_option {
-    padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 .payment_card {
     margin-bottom: 16px;
+}
+.payment_option input[type="radio"] {
+    display: none;
+}
+.payment_option label .radio-custom {
+    width: 12px;
+    height: 12px;
+    border: 2px solid #000000;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    margin-right: 8px;
+}
+.payment_option input[type="radio"]:checked + .radio-custom {
+    background-color: #000;
+}
+.payment_option input[type="radio"]:checked + .radio-custom::after {
+    content: "";
+    width: 4px;
+    height: 4px;
+    background: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+}
+.payment_option label {
+    padding: 10px;
+    display: block;
+    cursor: pointer;
+}
+.billing_info select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    appearance: none;
+}
+.billing_info .select-wrapper {
+    margin-bottom: 15px;
+    position: relative;
+}
+.billing_info .select-wrapper::after {
+    content: '';
+    font-size: 14px;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+}
+#stripe-payment {
+    padding: 20px;
+    background: #ededed;
+    border-radius: 4px;
+}
+.billing_info select:focus-visible {
+    outline: none;
 }
 .table_booking_grid .table h5,
 .table_booking_grid .table p {
@@ -252,6 +313,7 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     transition: border-color 0.3s ease;
+    background: #fff;
 }
 #card-element.focused {
     border-color: #BBA14E;

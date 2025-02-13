@@ -22,8 +22,9 @@ class Ticket_Booking_Checkout {
 						<div class="payment_method">
 							<div class="payment_card">
 								<div class="payment_option">
-									<input type="radio" id="stripe" name="payment_method" value="Card" checked>
-									<label for="stripe">Card</label>
+									<label for="stripe">
+										<input type="radio" id="stripe" name="payment_method" value="Card" checked>
+										<span class="radio-custom"></span>Card</label>
 								</div>
 								<div id="stripe-payment">
 									<div id="card-errors" role="alert"></div>
@@ -32,8 +33,9 @@ class Ticket_Booking_Checkout {
 								</div>
 							</div>
 							<div class="payment_option">
-								<input type="radio" id="bank_deposit" name="payment_method" value="Bank Deposit">
-								<label for="bank_deposit">Bank Deposit</label>
+								<label for="bank_deposit">
+									<input type="radio" id="bank_deposit" name="payment_method" value="Bank Deposit">
+									<span class="radio-custom"></span>Bank Deposit</label>
 							</div>
 						</div>
 					</div>
@@ -41,10 +43,12 @@ class Ticket_Booking_Checkout {
 						<h3>Billing info</h3>
 						<div class="location">
 							<label for="location">Location*</label>
-							<select id="location" name="location" required>
-								<option value="United Kingdom" selected>United Kingdom</option>
-								<option value="Outside UK">Outside UK</option>
-							</select>
+							<div class="select-wrapper">
+								<select id="location" name="location" required>
+									<option value="United Kingdom" selected>United Kingdom</option>
+									<option value="Outside UK">Outside UK</option>
+								</select>
+							</div>
 						</div>
 						<div class="bin_number" id="bin_number_div" style="display: none;">
 							<label for="bin_number">Business ID Number*</label>
