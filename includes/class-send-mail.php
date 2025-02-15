@@ -79,7 +79,7 @@ class Ticket_Send_Mail {
 							<td style="text-align: right;font-size: 1em; font-weight: 700;">£' . number_format( $total_amount, 2 ) . '</td>
 						</tr>
 					</table>
-					<div style="padding-bottom: 32px;">
+					<div style="padding-top: 32px;">
 						<p style="text-align: center;font-weight: 700;font-size: 1.25em;margin: 0;">Your payment status is: ' . $payment_status . '</p>
 					</div>
 				</div>
