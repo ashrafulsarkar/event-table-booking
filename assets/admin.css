@@ -1,4 +1,4 @@
-#add-table-popup, #edit-table-popup {
+#add-table-popup, #edit-table-popup, #edit-booking-popup, #view-booking-popup {
     display: none;
     width: 100%;
     height: 100%;
@@ -22,18 +22,18 @@
 #order_info p span {
     font-weight: 700;
 }
-#add-table-popup label,
-#edit-table-popup label {
+.popup_main_container label {
     display: block;
     margin-bottom: 8px;
 }
-#add-table-popup input,
-#add-table-popup select,
-#edit-table-popup input,
-#edit-table-popup select {
+.popup_main_container input,
+.popup_main_container select{
     width: 100%;
     margin-bottom: 8px;
 }
 .table_button {
+    text-align: right;
+}
+.table_button_center {
     text-align: right;
 }

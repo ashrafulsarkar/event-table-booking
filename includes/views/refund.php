@@ -24,6 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             <input type="hidden" name="payment_id" id="payment_id" />
             <input type="hidden" name="number_of_seats" id="number_of_seats" />
             <input type="hidden" name="table_number" id="table_number" />
+            <h4 id="bank_deposit_massage" style="display: none;">Bank Deposit payment cannot refund using this option. Please manually complete this option using the Bank.</h4>
             <button id="refund_btn" type="submit" class="button button-primary" style="display: none;">Refund</button>
         </div>
     </div>
@@ -54,15 +55,17 @@ if ( ! defined( 'ABSPATH' ) ) {
                         $('#full_name').text(order.fname + ' ' + order.lname);
                         $('#email').text(order.email);
                         $('#number_of_seats_text').text(order.number_of_seats);
-                        $('#amount').text(order.amount);
+                        $('#amount').text(order.total_amount);
                         $('#order_date').text(order.order_date);
                         $('#payment_id').val(order.payment_id);
                         $('#number_of_seats').val(order.number_of_seats);
                         $('#table_number').val(order.table_number);
                         $('#payment_status').text(order.payment_status);
-                        if (order.payment_status === 'Confirmed') {
+                        if (order.payment_status === 'Confirmed' || order.payment_method === 'Card') {
+                            $('#bank_deposit_massage').hide();
                             $('#refund_btn').show();
                         } else {
+                            $('#bank_deposit_massage').show();
                             $('#refund_btn').hide();
                         }
                     } else {
@@ -85,7 +88,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             const table_number = $('#table_number').val();
             const order_id = $('#order_id').val();
 
-            if (!payment_id || !number_of_seats || !table_number) {
+            if (!payment_id || !number_of_seats || !table_number || !order_id) {
                 alert('Missing necessary information for refund.');
                 return;
             }

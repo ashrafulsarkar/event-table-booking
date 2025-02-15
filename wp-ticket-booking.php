@@ -26,6 +26,7 @@ require_once WP_TICKET_BOOKING_PATH . 'vendor/autoload.php';
 require_once WP_TICKET_BOOKING_PATH . 'includes/class-ticket-booking-admin.php';
 require_once WP_TICKET_BOOKING_PATH . 'includes/class-ticket-booking-frontend.php';
 require_once WP_TICKET_BOOKING_PATH . 'includes/class-ticket-booking-checkout.php';
+require_once WP_TICKET_BOOKING_PATH . 'includes/hooks/sell_details.php';
 require_once WP_TICKET_BOOKING_PATH . 'includes/hooks/ticket_options.php';
 require_once WP_TICKET_BOOKING_PATH . 'includes/hooks/refund.php';
 require_once WP_TICKET_BOOKING_PATH . 'includes/class-ticket-booking-stripe.php';

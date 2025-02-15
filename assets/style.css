@@ -46,8 +46,8 @@
 }
 .payment_option input[type="radio"]:checked + .radio-custom::after {
     content: "";
-    width: 4px;
-    height: 4px;
+    width: 6px;
+    height: 6px;
     background: white;
     position: absolute;
     top: 50%;

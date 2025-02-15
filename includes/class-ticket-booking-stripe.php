@@ -33,7 +33,7 @@ class Ticket_Booking_Stripe {
 		$pay_method     = sanitize_text_field( $_POST['payMethod'] );
 		$location       = sanitize_text_field( $_POST['location'] );
 		$bin_number     = sanitize_text_field( $_POST['bin_number'] );
-		$total_vat      = intval( $_POST['total_vat'] );
+		$total_vat      = floatval( $_POST['total_vat'] );
 		$vatPercentage  = sanitize_text_field( $_POST['vatPercentage'] );
 
 		// Validate amount
@@ -171,7 +171,7 @@ class Ticket_Booking_Stripe {
 	//process_booking
 	public function process_booking() {
 		// Securely fetch all POST data
-		$total_amount  = intval( $_POST['total_amount'] ); // Amount in cents
+		$total_amount  = floatval( $_POST['total_amount'] ); // Amount in cents
 		$table_number  = sanitize_text_field( $_POST['table_number'] );
 		$seat_quantity = intval( $_POST['seat_quantity'] );
 		$table_type    = sanitize_text_field( $_POST['table_type'] );
