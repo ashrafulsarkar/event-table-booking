@@ -25,9 +25,6 @@ class Ticket_Send_Mail {
 		$payment_status  = $order->payment_status;
 
 		$subject = 'Fresh Award Booking Confirmation! - ' . $order_id;
-		// replay email
-		$headers = 'Reply-To: Fresh Awards <infor@freshproduce.org.uk>' . "\r\n";
-		$headers .= 'Content-Type: text/html; charset=UTF-8' . "\r\n";
 
 		// Logo URL
 		$logo_url = 'https://fpcfreshawards.co.uk/wp-content/uploads/2025/01/FPCFreshAwards-1.png';
@@ -105,9 +102,6 @@ class Ticket_Send_Mail {
 
 		$subject = 'Fresh Award Booking Canceled! - ' . $order_id;
 
-		$headers = 'Reply-To: Fresh Awards <infor@freshproduce.org.uk>' . "\r\n";
-		$headers .= 'Content-Type: text/html; charset=UTF-8' . "\r\n";
-
 		// Logo URL
 		$logo_url = 'https://fpcfreshawards.co.uk/wp-content/uploads/2025/01/FPCFreshAwards-1.png';
 
@@ -151,9 +145,6 @@ class Ticket_Send_Mail {
 		$order_id   = $order->order_id;
 
 		$subject = 'Fresh Award Booking Refund! - ' . $order_id;
-
-		$headers = 'Reply-To: Fresh Awards <infor@freshproduce.org.uk>' . "\r\n";
-		$headers .= 'Content-Type: text/html; charset=UTF-8' . "\r\n";
 
 		// Logo URL
 		$logo_url = 'https://fpcfreshawards.co.uk/wp-content/uploads/2025/01/FPCFreshAwards-1.png';

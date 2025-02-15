@@ -62,7 +62,7 @@ function edit_booking() {
 
 	if ( $payment_status == 'Refund' ) {
 		do_action( 'ticket_booking_order_refund', $order_id );
-	} elseif ( $payment_status == 'Cancelled' ) {
+	} elseif ( $payment_status == 'Canceled' ) {
 		do_action( 'ticket_booking_order_canceled', $order_id );
 	} else {
 		do_action( 'ticket_booking_order_complete', $order_id );
