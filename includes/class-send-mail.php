@@ -5,6 +5,7 @@
 class Ticket_Send_Mail {
 	public function __construct() {
 		add_action( 'ticket_booking_order_complete', array( $this, 'send_email_to_customer' ) );
+		add_action( 'ticket_booking_order_complete', array( $this, 'send_email_to_admin' ) );
 		add_action( 'ticket_booking_order_refund', array( $this, 'send_email_after_refund' ) );
 		add_action( 'ticket_booking_order_canceled', array( $this, 'send_email_order_canceled' ) );
 	}
@@ -90,6 +91,77 @@ class Ticket_Send_Mail {
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 		wp_mail( $email, $subject, $message, $headers );
 	}
+
+	//send_email_to_admin
+	public function send_email_to_admin($order_id) {
+		global $wpdb;
+		$table_name = $wpdb->prefix . 'ticket_bookings';
+		$order = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_name WHERE order_id = %s", $order_id));
+		
+		$admin_email = get_option('receive_booking_email');
+		$subject = 'New Table Booking - ' . $order_id;
+
+		// Logo URL
+		$logo_url = 'https://fpcfreshawards.co.uk/wp-content/uploads/2025/01/FPCFreshAwards-1.png';
+
+		// HTML email content
+		$message = '
+		<!DOCTYPE html>
+		<html lang="en">
+		<head>
+			<meta charset="UTF-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<title>New Booking Notification</title>
+		</head>
+		<body style="font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #fff;">
+			<div style="max-width: 700px; margin: 0 auto;">
+				<div style="text-align: center; margin-bottom: 40px;">
+					<img src="' . $logo_url . '" alt="Fresh Awards Logo" style="max-width: 200px;">
+				</div>
+				<div style="background-color: #FAF7F2;padding: 40px 32px;">
+					<p style="text-align: center;font-size: 1.75em;font-size: clamp(18px, 2vw, 28px);font-weight: 700;margin: 0;">New Table Booking Details</p>
+					<div style="margin-bottom: 32px;padding-bottom: 32px; border-bottom: 1px solid #DACFB3;">
+						<p style="text-align: center;font-weight: 700;font-size: 1.25em;margin: 0;padding-top: 16px;">Order number: ' . $order->order_id . '</p>
+					</div>
+					<h2 style="margin-top: 0;font-size: 1.25em;">ORDER SUMMARY</h2>
+					<table style="width: 100%;padding-bottom: 32px; border-bottom: 1px solid #DACFB3;">
+						<tr>
+							<td style="font-size: 1em;padding-bottom: 10px;">Customer Name:</td>
+							<td style="text-align: right;font-size: 1em;padding-bottom: 10px;">' . $order->fname . '</td>
+						</tr>
+						<tr>
+							<td style="font-size: 1em;padding-bottom: 10px;">Email:</td>
+							<td style="text-align: right;font-size: 1em;padding-bottom: 10px;">' . $order->email . '</td>
+						</tr>
+						<tr>
+							<td style="font-size: 1em;padding-bottom: 10px;">Table Number:</td>
+							<td style="text-align: right;font-size: 1em;padding-bottom: 10px;">' . $order->table_number . '</td>
+						</tr>
+						<tr>
+							<td style="font-size: 1em;padding-bottom: 10px;">Table Type:</td>
+							<td style="text-align: right;font-size: 1em;padding-bottom: 10px;">' . $order->table_type . '</td>
+						</tr>
+						<tr>
+							<td style="font-size: 1em;padding-bottom: 10px;">Number of Seats:</td>
+							<td style="text-align: right;font-size: 1em;padding-bottom: 10px;">' . $order->number_of_seats . '</td>
+						</tr>
+						<tr>
+							<td style="font-size: 1em;padding-bottom: 10px;">Total Amount:</td>
+							<td style="text-align: right;font-size: 1em;padding-bottom: 10px;">£' . number_format($order->total_amount, 2) . '</td>
+						</tr>
+					</table>
+					<div style="padding-top: 32px;">
+						<p style="text-align: center;font-weight: 700;font-size: 1.25em;margin: 0;">Payment Status: ' . $order->payment_status . '</p>
+					</div>
+				</div>
+			</div>
+		</body>
+		</html>';
+
+		$headers = array('Content-Type: text/html; charset=UTF-8');
+		wp_mail($admin_email, $subject, $message, $headers);
+	}
+
 
 	//send email after order canceled
 	public function send_email_order_canceled( $order_id ) {

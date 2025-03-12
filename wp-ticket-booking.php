@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Event Table Booking
  * Description: A custom ticket booking system with table management and Stripe payment integration.
- * Version: 1.1.0
+ * Version: 1.1.1
  * Author: Ashraful Sarkar Naiem
  * Author URI: https://www.linkedin.com/in/ashrafulsarkar/
  */

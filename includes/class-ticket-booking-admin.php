@@ -116,6 +116,7 @@ class Ticket_Booking_Admin {
             $vat_percentage = sanitize_text_field( $_POST['vat_percentage'] );
             $stripe_public_key = sanitize_text_field( $_POST['stripe_public_key'] );
             $stripe_client_secret = sanitize_text_field( $_POST['stripe_client_secret'] );
+            $receive_booking_email = sanitize_email( $_POST['receive_booking_email'] );
     
             update_option( 'ticket_booking_full_table_price', $full_table_price );
             update_option( 'ticket_booking_half_table_price', $half_table_price );
@@ -123,6 +124,7 @@ class Ticket_Booking_Admin {
             update_option( 'ticket_booking_vat_percentage', $vat_percentage );
             update_option( 'stripe_public_key', $stripe_public_key );
             update_option( 'stripe_client_secret', $stripe_client_secret );
+            update_option( 'receive_booking_email', $receive_booking_email );
     
             echo '<div class="notice notice-success"><p>Settings updated successfully!</p></div>';
         }
@@ -134,6 +136,7 @@ class Ticket_Booking_Admin {
         $vat_percentage = get_option( 'ticket_booking_vat_percentage', '0' );
         $stripe_public_key = get_option( 'stripe_public_key', '' );
         $stripe_client_secret = get_option( 'stripe_client_secret', '' );
+        $receive_booking_email = get_option( 'receive_booking_email', '' );
 
 		// Reset database
 		// my database is 'ticket_details' and 'ticket_bookings'

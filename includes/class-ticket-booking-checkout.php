@@ -35,7 +35,7 @@ class Ticket_Booking_Checkout {
 							<div class="payment_option">
 								<label for="bank_deposit">
 									<input type="radio" id="bank_deposit" name="payment_method" value="Bank Deposit">
-									<span class="radio-custom"></span>Bank Deposit</label>
+									<span class="radio-custom"></span>Request payment by invoice</label>
 							</div>
 						</div>
 					</div>

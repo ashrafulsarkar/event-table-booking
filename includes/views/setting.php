@@ -63,6 +63,16 @@
 						value="<?php echo esc_attr( $stripe_client_secret ); ?>" class="regular-text">
 				</td>
 			</tr>
+			<!-- Booking Receive Mail -->
+			<tr>
+				<th scope="row">
+					<label for="receive_booking_email">Booking Receive Mail</label>
+				</th>
+				<td>
+					<input type="email" id="receive_booking_email" name="receive_booking_email"
+						value="<?php echo esc_attr( $receive_booking_email ); ?>" class="regular-text">
+				</td>
+			</tr>
 		</table>
 		<p class="submit">
 			<button type="submit" name="save_prices" class="button button-primary">Save Changes</button>
