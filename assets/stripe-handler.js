@@ -5,81 +5,125 @@ document.addEventListener('DOMContentLoaded', function () {
     const card = elements.create('card');
     card.mount('#card-element');
 
-    // Handle form submission
-    const payNowButton = document.getElementById('pay-now-button');
-    payNowButton.addEventListener('click', async function (event) {
-        event.preventDefault();
+    // Show error messages
+    function showError(message) {
+        const errorElement = document.getElementById('card-errors');
+        errorElement.textContent = message;
+        errorElement.style.display = message ? 'block' : 'none';
+    }
 
-        // Disable the button to prevent duplicate clicks
-        payNowButton.disabled = true;
-
-        // Collect form data
-        const totalPrice = document.getElementById('total_price').innerText.trim();
-        const seatQuantity = document.getElementById('seat-quantity').innerText.trim();
-        const tableNumber = document.getElementById('table_number').value.trim();
-        const tableType = document.getElementById('table-type').value.trim();
-        const fname = document.getElementById('fname').value.trim();
-        const lname = document.getElementById('lname').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        const companyName = document.getElementById('cname').value.trim();
-
-        // Validate fields
-        if (!totalPrice || !tableNumber || !tableType || !fname || !lname || !email) {
-            alert('Please fill out all required fields.');
-            payNowButton.disabled = false;
-            return;
-        }
-
-        // Create a payment method
-        const { paymentMethod, error } = await stripe.createPaymentMethod({
-            type: 'card',
-            card: card,
-            billing_details: {
-                email: email,
-                name: `${fname} ${lname}`,
-            },
-        });
-
+    // Handle 3D Secure authentication
+    async function handle3DSecure(clientSecret) {
+        const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret);
+        
         if (error) {
-            // Display error in #card-errors
-            document.getElementById('card-errors').textContent = error.message;
-            payNowButton.disabled = false;
-            return;
-        }        
+            showError(error.message);
+            return false;
+        }
+        
+        if (paymentIntent.status === 'succeeded') {
+            window.location.href = checkoutData.successUrl + '?payment_intent=' + paymentIntent.id;
+            return true;
+        }
+        
+        showError('Payment failed. Please try again.');
+        return false;
+    }
 
-        // Send payment details to the server
-        jQuery.ajax({
-            url: checkoutData.ajax_url,
-            method: 'POST',
-            data: {
-                action: 'process_payment', // Must match the PHP action hook
-                payment_method: paymentMethod.id, // Should not be null/undefined
-                amount: totalPrice * 100, // Ensure this is a valid number
-                table_number: tableNumber,
-                seat_quantity: seatQuantity,
-                table_type: tableType,
-                fname: fname,
-                lname: lname,
-                email: email,
-                phone: phone,
-                company_name: companyName,
-            },
-            success: function (response) {
-                if (response.success) {
-                    // alert('Payment successful! Redirecting to confirmation page...');
-                    // console.log(response.data.payment_intent);
-                    window.location.href = response.data.redirect_url+'?payment_intent='+response.data.payment_intent.id;
-                } else {
-                    payNowButton.disabled = false;
-                    alert('Payment failed: ' + response.data);                    
+    // Get numeric value from price string
+    function getPriceAmount(priceString) {
+        return parseFloat(priceString.replace(/[^0-9.-]+/g, '')) * 100;
+    }
+
+    // Handle form submission
+    const paymentForm = document.getElementById('checkout-form');
+    const payNowButton = document.getElementById('pay-now-button');
+
+    paymentForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        
+        // Clear previous errors
+        showError('');
+
+        // Disable submit button
+        payNowButton.disabled = true;
+        payNowButton.textContent = 'Processing...';
+
+        try {
+            // Collect form data
+            const formData = new FormData(paymentForm);
+            const totalPrice = getPriceAmount(document.getElementById('total_price').innerText);
+            
+            // Validate required fields
+            const requiredFields = ['fname', 'lname', 'email', 'table_number', 'table-type'];
+            for (const field of requiredFields) {
+                if (!formData.get(field)) {
+                    throw new Error(`${field.replace('-', ' ')} is required`);
                 }
-            },
-            error: function (xhr, status, error) {
-                // console.log('AJAX Error:', xhr.responseText);
-                payNowButton.disabled = false;
-                alert('Payment failed: ' + error);
-            },
-        });
+            }
+
+            // Create payment method
+            const { paymentMethod, error: paymentMethodError } = await stripe.createPaymentMethod({
+                type: 'card',
+                card: card,
+                billing_details: {
+                    email: formData.get('email'),
+                    name: `${formData.get('fname')} ${formData.get('lname')}`,
+                }
+            });
+
+            if (paymentMethodError) {
+                throw new Error(paymentMethodError.message);
+            }
+
+            // Process payment
+            const response = await fetch(checkoutData.ajax_url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    action: 'process_payment',
+                    payment_method: paymentMethod.id,
+                    total_amount: totalPrice,
+                    table_number: formData.get('table_number'),
+                    seat_quantity: formData.get('seat-quantity'),
+                    table_type: formData.get('table-type'),
+                    fname: formData.get('fname'),
+                    lname: formData.get('lname'),
+                    email: formData.get('email'),
+                    company_name: formData.get('cname'),
+                    payMethod: 'Card',
+                    location: formData.get('location') || '',
+                    bin_number: formData.get('bin_number') || '',
+                    total_vat: document.getElementById('vat_amount').innerText.replace(/[^0-9.-]+/g, ''),
+                    vatPercentage: document.getElementById('vat_percentage').innerText.replace(/[^0-9.-]+/g, '')
+                })
+            });
+
+            const result = await response.json();
+
+            if (!result.success) {
+                throw new Error(result.data || 'Payment failed');
+            }
+
+            // Handle 3D Secure if required
+            if (result.data.requires_action) {
+                await handle3DSecure(result.data.payment_intent_client_secret);
+            } else {
+                // Payment successful
+                window.location.href = result.data.redirect_url;
+            }
+
+        } catch (error) {
+            showError(error.message);
+            payNowButton.disabled = false;
+            payNowButton.textContent = 'Pay Now';
+        }
+    });
+
+    // Update card error styling on input
+    card.addEventListener('change', function(event) {
+        showError(event.error ? event.error.message : '');
     });
 });

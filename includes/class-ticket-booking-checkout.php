@@ -84,8 +84,10 @@ class Ticket_Booking_Checkout {
 						}
 						?>
 						<div class="table_plan">
-							<p class="table_type"><?php echo esc_html( $table_type_text ); ?> x<span id="seat-quantity"><?php echo esc_html( $seat_quantity ); ?></span></p>
-							<p class="amount">£<span id="price"><?php echo esc_html( number_format( $price, 2, '.', '' ) ); ?></span></p>
+							<p class="table_type"><?php echo esc_html( $table_type_text ); ?> x<span
+									id="seat-quantity"><?php echo esc_html( $seat_quantity ); ?></span></p>
+							<p class="amount">£<span
+									id="price"><?php echo esc_html( number_format( $price, 2, '.', '' ) ); ?></span></p>
 						</div>
 						<div class="vat_percentage">
 							<p>VAT (<span id="vat_percentage"></span>%)</p>
@@ -157,7 +159,7 @@ class Ticket_Booking_Checkout {
 				<?php
 				$stripe_public_key = get_option( 'stripe_public_key', '' );
 				?>
-				
+
 				const checkoutData = <?php echo json_encode( [ 
 					'ajax_url'        => admin_url( 'admin-ajax.php' ),
 					'publishable_key' => $stripe_public_key,
@@ -198,101 +200,140 @@ class Ticket_Booking_Checkout {
 						payNowButton.textContent = 'Processing...';
 						payNowButton.style.cursor = 'not-allowed';
 						payNowButton.style.opacity = '0.5';
-						// Collect form data
-						const tableNumber = document.getElementById('table_number').value.trim();
-						const fname = document.getElementById('fname').value.trim();
-						const lname = document.getElementById('lname').value.trim();
-						const email = document.getElementById('email').value.trim();
-						const companyName = document.getElementById('cname').value.trim();
-						const tableType = document.getElementById('table-type').value.trim();
-						const seatQuantity = document.getElementById('seat-quantity').innerText.trim();
-						const payMethod = document.querySelector('input[name="payment_method"]:checked').value;
-						const location = document.getElementById('location').value.trim();
-						const binNumber = document.getElementById('bin_number').value.trim();
-						const totalPrice = document.getElementById('total_price').innerText.trim();
-						const vatAmount = document.getElementById('vat').innerText.trim();
-						const vatPercentage = document.getElementById('vat_percentage').innerText.trim();
 
-						//when location value will be outside UK then bin_number field will be required
-						if (location === 'Outside UK' && !binNumber) {
-							document.getElementById('error_massage').innerHTML = '<p>Please fill out all required fields.</p>';
-							payNowButton.disabled = false;
-							payNowButton.textContent = 'Pay Now';
-							payNowButton.style.cursor = 'pointer';
-							payNowButton.style.opacity = '1';
-							return;
-						}
+						try {
+							// Collect form data
+							const tableNumber = document.getElementById('table_number').value.trim();
+							const fname = document.getElementById('fname').value.trim();
+							const lname = document.getElementById('lname').value.trim();
+							const email = document.getElementById('email').value.trim();
+							const companyName = document.getElementById('cname').value.trim();
+							const tableType = document.getElementById('table-type').value.trim();
+							const seatQuantity = document.getElementById('seat-quantity').innerText.trim();
+							const payMethod = document.querySelector('input[name="payment_method"]:checked').value;
+							const location = document.getElementById('location').value.trim();
+							const binNumber = document.getElementById('bin_number').value.trim();
+							const totalPrice = document.getElementById('total_price').innerText.trim();
+							const vatAmount = document.getElementById('vat').innerText.trim();
+							const vatPercentage = document.getElementById('vat_percentage').innerText.trim();
 
-						// Validate fields
-						if (!totalPrice || !tableNumber || !tableType || !fname || !lname || !email) {
-							document.getElementById('error_massage').innerHTML = '<p>Please fill out all required fields.</p>';
-							payNowButton.disabled = false;
-							payNowButton.textContent = 'Pay Now';
-							payNowButton.style.cursor = 'pointer';
-							payNowButton.style.opacity = '1';
-							return;
-						}
-
-						// Create a payment method
-						const { paymentMethod, error } = await stripe.createPaymentMethod({
-							type: 'card',
-							card: card,
-							billing_details: {
-								email: email,
-								name: `${fname} ${lname}`,
-							},
-						});
-
-						if (error) {
-							document.getElementById('card-errors').textContent = error.message;
-							payNowButton.disabled = false;
-							payNowButton.textContent = 'Pay Now';
-							payNowButton.style.cursor = 'pointer';
-							payNowButton.style.opacity = '1';
-							return;
-						}
-
-						jQuery.ajax({
-							url: checkoutData.ajax_url,
-							method: 'POST',
-							data: {
-								action: 'process_payment',
-								payment_method: paymentMethod.id,
-								table_number: tableNumber,
-								fname: fname,
-								lname: lname,
-								email: email,
-								company_name: companyName,
-								table_type: tableType,
-								seat_quantity: seatQuantity,
-								payMethod: payMethod,
-								location: location,
-								bin_number: binNumber,
-								total_amount: totalPrice * 100,
-								total_vat: vatAmount,
-								vatPercentage: vatPercentage,
-							},
-							success: function (response) {
-								if (response.success) {
-									window.location.href = response.data.redirect_url + '?payment_intent=' + response.data.payment_intent.id;
-								} else {
-									payNowButton.disabled = false;
-									payNowButton.textContent = 'Pay Now';
-									payNowButton.style.cursor = 'pointer';
-									payNowButton.style.opacity = '1';
-									document.getElementById('error_massage').innerHTML = '<p>Payment failed.</p>';
-									console.log('Payment failed: ' + response.data);
-								}
-							},
-							error: function (xhr, status, error) {
+							//when location value will be outside UK then bin_number field will be required
+							if (location === 'Outside UK' && !binNumber) {
+								document.getElementById('error_massage').innerHTML = '<p>Please fill out all required fields.</p>';
 								payNowButton.disabled = false;
 								payNowButton.textContent = 'Pay Now';
 								payNowButton.style.cursor = 'pointer';
 								payNowButton.style.opacity = '1';
-								document.getElementById('error_massage').innerHTML = '<p>Payment failed.</p>';
-								console.log('Payment failed: ' + error);
-							},
-						});
+								return;
+							}
+
+							// Validate fields
+							if (!totalPrice || !tableNumber || !tableType || !fname || !lname || !email) {
+								document.getElementById('error_massage').innerHTML = '<p>Please fill out all required fields.</p>';
+								payNowButton.disabled = false;
+								payNowButton.textContent = 'Pay Now';
+								payNowButton.style.cursor = 'pointer';
+								payNowButton.style.opacity = '1';
+								return;
+							}
+
+							// Create a payment method
+							const { paymentMethod, error } = await stripe.createPaymentMethod({
+								type: 'card',
+								card: card,
+								billing_details: {
+									email: email,
+									name: `${fname} ${lname}`,
+								},
+							});
+
+							if (error) {
+								document.getElementById('card-errors').textContent = error.message;
+								payNowButton.disabled = false;
+								payNowButton.textContent = 'Pay Now';
+								payNowButton.style.cursor = 'pointer';
+								payNowButton.style.opacity = '1';
+								return;
+							}
+
+							jQuery.ajax({
+								url: checkoutData.ajax_url,
+								method: 'POST',
+								data: {
+									action: 'process_payment',
+									payment_method: paymentMethod.id,
+									table_number: tableNumber,
+									fname: fname,
+									lname: lname,
+									email: email,
+									company_name: companyName,
+									table_type: tableType,
+									seat_quantity: seatQuantity,
+									payMethod: payMethod,
+									location: location,
+									bin_number: binNumber,
+									total_amount: totalPrice * 100,
+									total_vat: vatAmount,
+									vatPercentage: vatPercentage,
+								},
+								success: function (response) {
+									if (response.success) {
+										if (response.data.requires_action) {
+											// Handle the case where authentication is required
+											stripe.confirmCardPayment(response.data.payment_intent_client_secret)
+												.then(function (result) {
+													if (result.error) {
+														// Show error to your customer and revert table status
+														jQuery.ajax({
+															url: checkoutData.ajax_url,
+															method: 'POST',
+															data: {
+																action: 'revert_table_status',
+																table_number: tableNumber,
+																seat_quantity: seatQuantity,
+																order_id: response.data.order_id
+															},
+															success: function () {
+																document.getElementById('error_massage').innerHTML = '<p>Payment authentication failed: ' + result.error.message + '</p>';
+																payNowButton.disabled = false;
+																payNowButton.textContent = 'Pay Now';
+																payNowButton.style.cursor = 'pointer';
+																payNowButton.style.opacity = '1';
+															}
+														});
+													} else {
+														// The payment has been processed!
+														window.location.href = response.data.redirect_url + '?payment_intent=' + result.paymentIntent.id;
+													}
+												});
+										} else {
+											// No additional authentication required
+											window.location.href = response.data.redirect_url + '?payment_intent=' + response.data.payment_intent.id;
+										}
+									} else {
+										payNowButton.disabled = false;
+										payNowButton.textContent = 'Pay Now';
+										payNowButton.style.cursor = 'pointer';
+										payNowButton.style.opacity = '1';
+										document.getElementById('error_massage').innerHTML = '<p>Payment failed: ' + response.data + '</p>';
+									}
+								},
+								error: function (xhr, status, error) {
+									payNowButton.disabled = false;
+									payNowButton.textContent = 'Pay Now';
+									payNowButton.style.cursor = 'pointer';
+									payNowButton.style.opacity = '1';
+									document.getElementById('error_massage').innerHTML = '<p>Payment failed:' + error + '</p>';
+									// console.log('Payment failed: ' + error);
+								},
+							});
+						} catch (error) {
+							document.getElementById('error_massage').innerHTML = '<p>' + error.message + '</p>';
+							payNowButton.disabled = false;
+							payNowButton.textContent = 'Pay Now';
+							payNowButton.style.cursor = 'pointer';
+							payNowButton.style.opacity = '1';
+						}
 					});
 
 					const bookNowButton = document.getElementById('book-now-button');
@@ -331,7 +372,7 @@ class Ticket_Booking_Checkout {
 						}
 
 						// Validate fields
-						if (!totalPrice || !tableNumber || !tableType || !fname || !lname || !email ) {
+						if (!totalPrice || !tableNumber || !tableType || !fname || !lname || !email) {
 							document.getElementById('error_massage').innerHTML = '<p>Please fill out all required fields.</p>';
 							bookNowButton.disabled = false;
 							bookNowButton.textContent = 'Book Now';
